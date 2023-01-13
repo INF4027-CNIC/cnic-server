@@ -1,4 +1,4 @@
-import mongoose, { SchemaType, SchemaTypes } from 'mongoose';
+import mongoose, { SchemaTypes } from 'mongoose';
 import { USER } from 'src/users/users.costants';
 
 export const AdminSchema = new mongoose.Schema({
@@ -8,13 +8,13 @@ export const AdminSchema = new mongoose.Schema({
   },
 
   metadata: {
-    createdAt: {
+    nominatedAd: {
       type: Date,
       immutable: true,
       default: () => Date.now(),
     },
 
-    updatedAt: {
+    denominatedAt: {
       type: Date,
       default: () => Date.now(),
     },
@@ -25,19 +25,14 @@ export const AdminSchema = new mongoose.Schema({
   hashRt: String,
 });
 
-AdminSchema.pre('save', function (next) {
-  this.metadata.updatedAt = new Date(Date.now());
-  next();
-});
-
 export interface Admin {
   id: string;
 
   userData: string;
 
   metadata: {
-    createdAt: Date;
-    updatedAt: Date;
+    nominateAt: Date;
+    denominateAt: Date;
   };
 
   hash: string;
