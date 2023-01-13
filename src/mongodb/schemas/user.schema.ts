@@ -1,20 +1,21 @@
 import mongoose from 'mongoose';
 
-export const UserSchema = new mongoose.Schema({
-  firstname: {
-    type: String,
-    maxLength: 30,
-    index: true,
-    require: true,
-    trim: true,
-  },
-
-  lastname: {
-    type: String,
-    maxLength: 30,
-    index: true,
-    require: true,
-    trim: true,
+export const UserSchema = new mongoose.Schema<User>({
+  name: {
+    first: {
+      type: String,
+      maxLength: 30,
+      index: true,
+      require: true,
+      trim: true,
+    },
+    last: {
+      type: String,
+      maxLength: 30,
+      index: true,
+      require: true,
+      trim: true,
+    },
   },
 
   phone: {
@@ -29,45 +30,73 @@ export const UserSchema = new mongoose.Schema({
   },
 
   birth: {
-    date: Date,
-    place: String,
-    require: true,
+    date: {
+      type: Date,
+      require: true,
+    },
+    place: {
+      type: String,
+      require: true,
+      trim: true,
+    },
   },
 
-  createdAt: {
-    type: Date,
-    immutable: true,
-    default: () => Date.now(),
-  },
-
-  updatedAt: {
-    type: Date,
-    default: () => Date.now(),
-  },
-
-  uniqueIdentity: {
-    type: String,
-    default: () => new mongoose.Types.ObjectId().toString(),
+  code: {
+    type: Number,
+    default: () => 1,
     unique: true,
     immutable: true,
   },
+
+  metadata: {
+    createdAt: {
+      type: Date,
+      immutable: true,
+      default: () => Date.now(),
+    },
+
+    updatedAt: {
+      type: Date,
+      default: () => Date.now(),
+    },
+  },
+
+  hash: String,
+
+  hashRt: String,
 });
 
 UserSchema.virtual('fullName').get(function () {
-  return this.firstname + ' ' + this.lastname;
+  return this.name.first + ' ' + this.name.last;
 });
 
 UserSchema.pre('save', function (next) {
-  this.updatedAt = new Date(Date.now());
+  this.metadata.updatedAt = new Date(Date.now());
   next();
 });
 
 export interface User {
   id: string;
-  firstname: string;
-  lastname: string;
+  name: {
+    first: string;
+    last: string;
+  };
   phone: number;
   avatar: string;
-  createdAt: Date;
-  updatedAt: Date;
+  birth: {
+    date: Date;
+    place: string;
+  };
+  code: number;
+
+  metadata: {
+    createdAt: Date;
+    updatedAt: Date;
+  };
+
+  hash: string;
+  hashRt: string;
+
+  // virtual
+  fullname: string;
 }
