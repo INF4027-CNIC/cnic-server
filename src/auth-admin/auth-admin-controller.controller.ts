@@ -1,16 +1,9 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { AuthAdminService } from './auth-admin-service.service';
 import { LoginAdminDto } from './dto';
 import { authAdminRoutes } from './enums';
 
-@Controller('auth-admin-controller')
+@Controller(authAdminRoutes.authAdmin)
 export class AuthAdminController {
   constructor(private readonly authAdminService: AuthAdminService) {}
 
