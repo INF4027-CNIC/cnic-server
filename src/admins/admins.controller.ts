@@ -12,8 +12,6 @@ export class AdminsController {
 
   @Post(adminRoutes.create)
   async create(@Body() createAdminDto: CreateAdminDto): Promise<AdminEntity> {
-    console.log({ hello: 'hello' });
-
     return this.adminService.create(createAdminDto);
   }
 
