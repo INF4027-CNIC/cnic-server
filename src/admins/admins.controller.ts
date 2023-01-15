@@ -1,31 +1,42 @@
-import { Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { AdminsService } from './admins.service';
-import { adminController } from './enum/admin-controller';
+import { CreateAdminDto } from './dto/create-admin.dto';
+import { AdminEntity } from './entities/admin.entity';
+import { adminRoutes } from './enum/admin-controller';
 
-@Controller(adminController.admins)
+@Controller(adminRoutes.admins)
 export class AdminsController {
   private static readonly adminId = 'adminId';
 
   constructor(private readonly adminService: AdminsService) {}
 
-  @Post(adminController.create)
-  async create() {
-    return {
-      mesage: 'create',
-    };
+  @Post(adminRoutes.create)
+  async create(@Body() createAdminDto: CreateAdminDto): Promise<AdminEntity> {
+    console.log({ hello: 'hello' });
+
+    return this.adminService.create(createAdminDto);
   }
 
-  @Get(adminController.findAll)
-  async findAll() {
-    return {
-      message: 'find all',
-    };
-  }
+  // @Get(adminRoutes.findAll)
+  // async findAll() {
+  //   return [
+  //     {
+  //       message: 'find all',
+  //     },
+  //   ];
+  // }
 
-  @Get(`${adminController.findOne}/${AdminsController.adminId}`)
-  async findOneById(@Param(AdminsController.adminId) adminId: string) {
-    return {
-      message: adminId,
-    };
-  }
+  // @Get(`${adminRoutes.findOneById}/${AdminsController.adminId}`)
+  // async findOneById(
+  //   @Param(AdminsController.adminId) adminId: string,
+  // ): Promise<any> {
+  //   return {
+  //     message: adminId,
+  //   };
+  // }
+
+  // @Get(`${adminRoutes.findByName}`)
+  // async findByName(): Promise<any[]> {
+  //   //
+  // }
 }

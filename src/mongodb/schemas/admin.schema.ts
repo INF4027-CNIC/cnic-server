@@ -2,9 +2,15 @@ import mongoose, { SchemaTypes } from 'mongoose';
 import { USER } from 'src/users/users.costants';
 
 export const AdminSchema = new mongoose.Schema({
-  userData: {
+  userRef: {
     type: SchemaTypes.ObjectId,
     ref: USER,
+  },
+
+  isActive: {
+    type: Boolean,
+    default: true,
+    index: true,
   },
 
   metadata: {
@@ -28,7 +34,9 @@ export const AdminSchema = new mongoose.Schema({
 export interface Admin {
   id: string;
 
-  userData: string;
+  userRef: string;
+
+  isActive: boolean;
 
   metadata: {
     nominateAt: Date;

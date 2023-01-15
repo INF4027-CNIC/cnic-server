@@ -1,7 +1,7 @@
-export enum adminController {
+export enum adminRoutes {
   admins = 'admins',
   create = 'create',
   findAll = 'findAll',
-  findOne = 'findOne',
-  updateOne = 'updateOne',
+  findOneById = 'findOne',
+  findByName = 'findByName',
 }
