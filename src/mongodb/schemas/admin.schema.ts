@@ -1,4 +1,5 @@
 import mongoose, { SchemaTypes } from 'mongoose';
+import { Roles } from 'src/common/enums';
 import { USER } from 'src/users/users.costants';
 
 export const AdminSchema = new mongoose.Schema({
@@ -24,6 +25,11 @@ export const AdminSchema = new mongoose.Schema({
       type: Date,
       default: () => Date.now(),
     },
+  },
+
+  roles: {
+    type: [String],
+    default: [Roles.Admin, Roles.User],
   },
 
   hash: String,

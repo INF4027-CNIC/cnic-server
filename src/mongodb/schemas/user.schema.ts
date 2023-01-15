@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { Roles } from 'src/common/enums';
 
 export const UserSchema = new mongoose.Schema<User>({
   name: {
@@ -61,6 +62,11 @@ export const UserSchema = new mongoose.Schema<User>({
     },
   },
 
+  roles: {
+    type: [String],
+    default: [Roles.User],
+  },
+
   hash: String,
 
   hashRt: String,
@@ -93,6 +99,8 @@ export interface User {
     createdAt: Date;
     updatedAt: Date;
   };
+
+  roles: string[];
 
   hash: string;
   hashRt: string;
