@@ -18,5 +18,6 @@ import { UsersModule } from 'src/users/users.module';
   ],
   controllers: [AdminsController],
   providers: [AdminsService],
+  exports: [MongooseModule, AdminsService],
 })
 export class AdminsModule {}
