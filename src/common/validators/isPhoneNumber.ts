@@ -9,7 +9,7 @@ import {
 @ValidatorConstraint({ async: false })
 export class PhoneNumberConstraint implements ValidatorConstraintInterface {
   validate(phoneNumber: string, args: ValidationArguments) {
-    // regular expression to match phone number with the format 555-555-5555
+    // regular expression to match phone number with the format 677109790
     const phoneRegex = /^6[^0-4]\d{7}$/;
     if (!phoneRegex.test(phoneNumber)) {
       return false;

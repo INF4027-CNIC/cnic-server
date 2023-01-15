@@ -27,12 +27,12 @@ export const UserSchema = new mongoose.Schema<User>({
 
   avatar: {
     type: String,
-    default: '',
+    trim: true,
   },
 
   birth: {
     date: {
-      type: Date,
+      type: Number,
       require: true,
     },
     place: {
@@ -42,11 +42,39 @@ export const UserSchema = new mongoose.Schema<User>({
     },
   },
 
+  size: {
+    type: Number,
+    min: 0,
+    max: 4,
+  },
+
+  gender: String,
+
+  profession: {
+    type: String,
+    required: true,
+  },
+
   code: {
     type: Number,
-    default: () => 1,
+    default: () => Date.now() + Math.floor(Math.random() * 100),
     unique: true,
     immutable: true,
+  },
+
+  address: {
+    type: String,
+    required: true,
+  },
+
+  fathername: {
+    type: String,
+    require: true,
+  },
+
+  mothername: {
+    type: String,
+    required: true,
   },
 
   metadata: {
@@ -90,17 +118,28 @@ export interface User {
   phone: number;
   avatar: string;
   birth: {
-    date: Date;
+    date: number;
     place: string;
   };
+
+  size: number;
+
+  gender: string;
+
+  profession: string;
+
   code: number;
 
+  address: string;
+
+  roles: string[];
+
+  fathername: string;
+  mothername: string;
   metadata: {
     createdAt: Date;
     updatedAt: Date;
   };
-
-  roles: string[];
 
   hash: string;
   hashRt: string;

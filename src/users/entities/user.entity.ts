@@ -22,6 +22,30 @@ export class UserEntity {
   private avatar: string;
 
   @ApiProperty()
+  private birthDate: number;
+
+  @ApiProperty()
+  private birthPlace: string;
+
+  @ApiProperty()
+  private size: number;
+
+  @ApiProperty()
+  private gender: string;
+
+  @ApiProperty()
+  private profession: string;
+
+  @ApiProperty()
+  private address: string;
+
+  @ApiProperty()
+  private fathername: string;
+
+  @ApiProperty()
+  private mothername: string;
+
+  @ApiProperty()
   private createdAt: Date;
 
   @ApiProperty()
@@ -46,6 +70,16 @@ export class UserEntity {
     this.lastname = userData.name.last;
     this.phone = userData.phone;
     this.avatar = userData.avatar;
+
+    this.birthDate = userData.birth.date;
+    this.birthPlace = userData.birth.place;
+    this.size = userData.size;
+    this.gender = userData.gender;
+    this.profession = userData.profession;
+    this.address = userData.address;
+
+    this.fathername = userData.fathername;
+    this.mothername = userData.mothername;
 
     this.fullname = userData.fullname;
 
@@ -89,6 +123,38 @@ export class UserEntity {
 
   get getAvatar() {
     return this.avatar;
+  }
+
+  get getBirthDate(): number {
+    return this.birthDate;
+  }
+
+  get getBirthPlace(): string {
+    return this.birthPlace;
+  }
+
+  get getSize(): number {
+    return this.size;
+  }
+
+  get getGender(): string {
+    return this.gender;
+  }
+
+  get getProfession(): string {
+    return this.profession;
+  }
+
+  get getAdress(): string {
+    return this.address;
+  }
+
+  get getFathername(): string {
+    return this.fathername;
+  }
+
+  get getMothername(): string {
+    return this.mothername;
   }
 
   get getCreatedAt() {

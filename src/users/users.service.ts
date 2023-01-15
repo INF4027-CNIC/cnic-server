@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { DefaultHttpException } from 'src/common/exceptions';
+import { CredentialsTaken } from 'src/common/exceptions';
+import { exceptionsCodes } from 'src/mongodb/enum';
 import { User } from 'src/mongodb/schemas';
 import { CreateUserDto } from './dto';
 import { UserEntity } from './entities';
@@ -14,8 +15,6 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<any> {
-    return { createUserDto };
-
     try {
       const newUser = new this.userModel(createUserDto);
 
@@ -25,7 +24,8 @@ export class UsersService {
 
       return new UserEntity(newUser);
     } catch (err) {
-      throw new DefaultHttpException();
+      if (err.code === exceptionsCodes.duplicatePropertyValue)
+        throw new CredentialsTaken();
     }
   }
 
