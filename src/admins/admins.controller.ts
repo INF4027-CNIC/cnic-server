@@ -40,17 +40,23 @@ export class AdminsController {
     return this.adminService.findOneById(adminId);
   }
 
-  // @Get(adminRoutes.findAll)
-  // async findAll() {
-  //   return [
-  //     {
-  //       message: 'find all',
-  //     },
-  //   ];
-  // }
+  /**
+   * @TODO - implement this method
+   */
+  @Get(adminRoutes.findAll)
+  async findAll() {
+    return [
+      {
+        message: 'find all',
+      },
+    ];
+  }
 
-  // @Get(`${adminRoutes.findByName}`)
-  // async findByName(): Promise<any[]> {
-  //   //
-  // }
+  /**
+   * @TODO - implement this method
+   */
+  @Get(`${adminRoutes.findByName}`)
+  async findByName() {
+    //
+  }
 }
