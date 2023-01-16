@@ -6,6 +6,7 @@ import {
   ParseIntPipe,
   Post,
 } from '@nestjs/common';
+import { GetAdmin } from 'src/auth-admin/decorators';
 import { IsMongodbObjectIdPipe } from 'src/common/pipes';
 import { AdminsService } from './admins.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
@@ -18,6 +19,11 @@ export class AdminsController {
   private static readonly adminCode = 'adminCode';
 
   constructor(private readonly adminService: AdminsService) {}
+
+  @Get(adminRoutes.me)
+  async me(@GetAdmin() admin: any): Promise<any> {
+    return admin;
+  }
 
   @Post(adminRoutes.create)
   async create(@Body() createAdminDto: CreateAdminDto): Promise<AdminEntity> {

@@ -6,6 +6,7 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { PublicRoute } from 'src/common/decorators';
 import { AuthAdminService } from './auth-admin-service.service';
 import { LoginAdminDto } from './dto';
 import { authAdminRoutes } from './enums';
@@ -16,6 +17,7 @@ export class AuthAdminController {
 
   @Post(authAdminRoutes.login)
   @HttpCode(HttpStatus.OK)
+  @PublicRoute()
   async login(@Body() loginAdminDto: LoginAdminDto): Promise<any> {
     return await this.authAdminService.login(loginAdminDto);
   }

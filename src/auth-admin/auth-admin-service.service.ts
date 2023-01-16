@@ -52,6 +52,26 @@ export class AuthAdminService {
     };
   }
 
+  async jwtValidateAdmin(adminId: string) {
+    const admin = await this.adminService.findOneById(adminId);
+
+    if (!admin || !admin.getHash) return null;
+
+    return admin;
+  }
+
+  async jwtRefreshValidateAdmin(adminId: string, bearerRt: string) {
+    const admin = await this.adminService.findOneById(adminId);
+
+    if (!admin || !admin.getHash) return null;
+
+    const isRtMatched = await argon.verify(admin.getHash, bearerRt);
+
+    if (!isRtMatched) return null;
+
+    return admin;
+  }
+
   private async generateToken(
     adminId: string,
     adminCode: number,
