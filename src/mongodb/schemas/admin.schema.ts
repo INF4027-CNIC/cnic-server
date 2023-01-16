@@ -52,6 +52,8 @@ export interface Admin {
 
   password: string;
 
+  adminCode: number;
+
   userRef: string;
 
   metadata: {

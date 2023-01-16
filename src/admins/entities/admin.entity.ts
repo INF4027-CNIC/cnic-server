@@ -4,8 +4,10 @@ export class AdminEntity {
   private id: string;
   private isActive: boolean;
   private password: string;
+  private adminCode: number;
   private userRef: string;
   private hash: string;
+
   constructor(adminData: Admin, password?: string) {
     this.init(adminData, password);
   }
@@ -15,6 +17,7 @@ export class AdminEntity {
     this.userRef = adminData.userRef;
     this.isActive = adminData.isActive;
     this.password = password && password;
+    this.adminCode = adminData.adminCode;
     this.hash = adminData.hash;
   }
 
@@ -32,6 +35,10 @@ export class AdminEntity {
 
   get getPassword(): string {
     return this.password;
+  }
+
+  get getAdminCode(): number {
+    return this.adminCode;
   }
 
   get getHash(): string {

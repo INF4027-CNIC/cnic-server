@@ -1,7 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
+import { DefaultHttpException } from 'src/common/exceptions';
 import { generateUUID, hashPassword } from 'src/common/helpers';
+import { exceptionsCodes } from 'src/mongodb/enum';
 import { Admin } from 'src/mongodb/schemas/admin.schema';
 import { UserNotFoundException } from 'src/users/exceptions/user-not-fount';
 import { UsersService } from 'src/users/users.service';
@@ -18,36 +20,49 @@ export class AdminsService {
   ) {}
 
   async create(createAdminDto: CreateAdminDto): Promise<AdminEntity> {
-    const { userRef: userRefId } = createAdminDto;
+    try {
+      const { userRef: userRefId } = createAdminDto;
 
-    if (!mongoose.Types.ObjectId.isValid(userRefId))
-      throw new BadRequestException(
-        "To create and admin account, you must provide he's correct user id",
-      );
+      if (!mongoose.Types.ObjectId.isValid(userRefId))
+        throw new BadRequestException(
+          "To create and admin account, you must provide he's correct user id",
+        );
 
-    const user = await this.userService.findById(userRefId);
+      const user = await this.userService.findById(userRefId);
 
-    if (!user) throw new UserNotFoundException();
+      if (!user) throw new UserNotFoundException();
 
-    const adminPassword = generateUUID();
+      const adminPassword = generateUUID();
 
-    const hash = await hashPassword(adminPassword);
+      const hash = await hashPassword(adminPassword);
 
-    const newAdmin = new this.adminModel({ ...createAdminDto, hash });
+      const newAdmin = new this.adminModel({ ...createAdminDto, hash });
 
-    await newAdmin.save();
+      await newAdmin.save();
 
-    const admin = await this.adminModel
-      .findById(newAdmin.id)
-      .populate('userRef');
+      const admin = await this.adminModel
+        .findById(newAdmin.id)
+        .populate('userRef');
 
-    return new AdminEntity(admin, adminPassword);
+      return new AdminEntity(admin, adminPassword);
+    } catch (err) {
+      if (err.code === exceptionsCodes.duplicatePropertyValue)
+        throw new BadRequestException(
+          'Some given credentials are already taken by another admin, try agin',
+        );
+
+      throw new DefaultHttpException();
+    }
   }
 
   async findAll(): Promise<AdminEntity[]> {
-    const allAdmins = await this.adminModel.find().populate('userRef');
+    try {
+      const allAdmins = await this.adminModel.find().populate('userRef');
 
-    return allAdmins.map((admin) => new AdminEntity(admin));
+      return allAdmins.map((admin) => new AdminEntity(admin));
+    } catch (err) {
+      throw new DefaultHttpException();
+    }
   }
 
   async findOneById(adminId: string): Promise<AdminEntity> {
