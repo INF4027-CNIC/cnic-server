@@ -2,7 +2,6 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ADMIN as ADMINS_MODEL_TEKEN } from 'src/admins/admins.constant';
-import { AdminEntity } from 'src/admins/entities/admin.entity';
 import { AdminNotFoundException } from 'src/admins/exceptions';
 import { isPasswordMatched } from 'src/common/helpers';
 import { Admin } from 'src/mongodb/schemas/admin.schema';
@@ -15,19 +14,19 @@ export class AuthAdminService {
   ) {}
 
   async login(logingAdminDto: LoginAdminDto): Promise<any> {
-    const { adminCode, password } = logingAdminDto;
+    try {
+      const { adminCode, password } = logingAdminDto;
 
-    const admin = await this.adminModel
-      .findOne({ code: adminCode })
-      .populate('userRef');
+      const admin = await this.findByAdminCode(adminCode);
 
-    if (!admin) throw new AdminNotFoundException();
+      const isPasswordValid = await isPasswordMatched(password, admin.hash);
 
-    const isPasswordValid = isPasswordMatched(password, admin.hash);
+      if (!isPasswordValid) throw new UnauthorizedException('invalid password');
 
-    if (!isPasswordValid) throw new UnauthorizedException();
-
-    return new AdminEntity(admin);
+      return admin;
+    } catch (err) {
+      throw err;
+    }
   }
 
   async logout(): Promise<any> {
@@ -40,5 +39,28 @@ export class AuthAdminService {
     return {
       message: 'Refresh successfully',
     };
+  }
+
+  async findByAdminCode(adminCode: number): Promise<any> {
+    try {
+      const foundAdmin = await this.adminModel
+        .findOne({
+          adminCode: adminCode,
+          isActive: true,
+        })
+        .populate('userRef', 'id name code phone');
+
+      if (!foundAdmin) throw new AdminNotFoundException();
+
+      return foundAdmin;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async adminExists(adminCode: number): Promise<boolean> {
+    const admin = await this.adminModel.findOne({ adminCode: adminCode });
+
+    return !!admin;
   }
 }
