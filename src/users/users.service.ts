@@ -53,10 +53,37 @@ export class UsersService {
     }
   }
 
-  async findAll() {
-    return {
-      message: 'retrieve all users',
-    };
+  async findAll(): Promise<UserEntity[]> {
+    const users = await this.userModel.find().exec();
+
+    if (!users) throw new NotFoundException('No users found.');
+
+    const usersList = users.map((user) => {
+      const userData = {
+        name: {
+          first: user.name.first,
+          last: user.name.last,
+        },
+        birth: {
+          date: user.birth.date,
+          place: user.birth.place,
+        },
+        phone: user.phone,
+        avatar: user.avatar,
+        size: user.size,
+        address: user.address,
+        gender: user.gender,
+        profession: user.profession,
+        fathername: user.fathername,
+        mothername: user.mothername,
+      };
+
+      const retrievedUser = new UserEntity(new this.userModel(userData));
+
+      return retrievedUser;
+    });
+
+    return usersList;
   }
 
   async findById(userId: string): Promise<any> {

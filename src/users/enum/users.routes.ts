@@ -1,5 +1,6 @@
-export enum usersController {
+export enum UsersRoutes {
   users = 'users',
+  allUsers = 'all-users',
   create = 'create',
   searchByName = 'search-by-name',
   findById = 'find-by-id',
