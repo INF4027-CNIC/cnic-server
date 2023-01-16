@@ -7,5 +7,6 @@ export enum UsersRoutes {
   findByCode = 'find-by-code',
   updateById = 'update-by-id',
   updateByCode = 'update-by-code',
+  updateCodeById = 'update-code-by-id',
   delete = 'delete',
 }

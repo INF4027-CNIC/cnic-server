@@ -18,6 +18,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { IsMongodbObjectIdPipe } from 'src/common/pipes';
 import { CreateUserDto } from './dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserCodeDTO } from './dto/update-code.dto';
 
 @Controller(UsersRoutes.users)
 @UseInterceptors(ClassSerializerInterceptor)
@@ -60,6 +61,14 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<UserEntity> {
     return this.usersService.updateById(userId, updateUserDto);
+  }
+
+  @Patch(`${UsersRoutes.updateCodeById}/:userId`)
+  async updateUserCodeById(
+    @Param('userId', IsMongodbObjectIdPipe) userId: string,
+    @Body() userCode: UpdateUserCodeDTO,
+  ): Promise<UserEntity> {
+    return this.usersService.updateUserCodeById(userId, userCode);
   }
 
   @Patch(`${UsersRoutes.updateByCode}/:userCode`)

@@ -9,6 +9,7 @@ import { CredentialsTaken, DefaultHttpException } from 'src/common/exceptions';
 import { exceptionsCodes } from 'src/mongodb/enum';
 import { User } from 'src/mongodb/schemas';
 import { CreateUserDto } from './dto';
+import { UpdateUserCodeDTO } from './dto/update-code.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities';
 import { USER as USER_MODEL_TOKEN } from './users.costants';
@@ -99,6 +100,101 @@ export class UsersService {
   }
 
   async searchByName(username: string): Promise<any[]> {
+    if (!username)
+      throw new BadRequestException('The user names must be provided');
+
+    try {
+      if (username.indexOf(' ') !== -1) {
+        const [firstname, lastname] = username.split(' ');
+
+        const searchedUsers = await this.userModel
+          .find({
+            $or: [
+              { name: { first: firstname, last: lastname } },
+              { name: { first: lastname, last: firstname } },
+            ],
+          })
+          .exec();
+
+        if (!searchedUsers)
+          throw new NotFoundException("The searched user doesn't exist");
+
+        const usersList = searchedUsers.map((user) => {
+          const userData = {
+            name: {
+              first: user.name.first,
+              last: user.name.last,
+            },
+            birth: {
+              date: user.birth.date,
+              place: user.birth.place,
+            },
+            phone: user.phone,
+            avatar: user.avatar,
+            size: user.size,
+            address: user.address,
+            gender: user.gender,
+            profession: user.profession,
+            fathername: user.fathername,
+            mothername: user.mothername,
+          };
+
+          const retrievedUser = new UserEntity(new this.userModel(userData));
+
+          return retrievedUser;
+        });
+
+        return usersList;
+      } else {
+        console.log('passed here');
+        console.log(username);
+
+        const searchedUsers = await this.userModel
+          .find({
+            $or: [
+              {
+                'name.first': username,
+              },
+              {
+                'name.last': username,
+              },
+            ],
+          })
+          .exec();
+
+        if (!searchedUsers)
+          throw new NotFoundException("The searched user doesn't exist");
+
+        const usersList = searchedUsers.map((user) => {
+          const userData = {
+            name: {
+              first: user.name.first,
+              last: user.name.last,
+            },
+            birth: {
+              date: user.birth.date,
+              place: user.birth.place,
+            },
+            phone: user.phone,
+            avatar: user.avatar,
+            size: user.size,
+            address: user.address,
+            gender: user.gender,
+            profession: user.profession,
+            fathername: user.fathername,
+            mothername: user.mothername,
+          };
+
+          const retrievedUser = new UserEntity(new this.userModel(userData));
+
+          return retrievedUser;
+        });
+
+        return usersList;
+      }
+    } catch (error) {
+      throw new Error('Oops something went wrong');
+    }
     // const searchedUser = await this.userModel.find({
     //   username: { $regex: new RegExp(username), $options: 'i' },
     // });
@@ -108,15 +204,6 @@ export class UsersService {
     //   results.push(new UserEntity(user));
     // }
     // return results;
-
-    return [
-      {
-        user1: username,
-      },
-      {
-        user2: 'user2',
-      },
-    ];
   }
 
   async isUserExist(userId: string) {
@@ -208,6 +295,59 @@ export class UsersService {
       throw new BadRequestException(`Oops Something went wrong`);
     }
   }
+
+  async updateUserCodeById(
+    userId: string,
+    userNewCode: UpdateUserCodeDTO,
+  ): Promise<UserEntity> {
+    const { newCode } = userNewCode;
+
+    try {
+      const searchedUser = await this.findById(userId);
+
+      if (!searchedUser)
+        throw new NotFoundException(
+          `The user with identifier ${userId} doesn't exist`,
+        );
+
+      await this.userModel.updateOne(
+        { _id: userId },
+        {
+          $set: {
+            code: newCode,
+          },
+          $currentDate: { updatedAt: true },
+        },
+      );
+
+      const modifiedUser = await this.findById(userId);
+
+      const modifiedUserData = {
+        name: {
+          first: modifiedUser.getFistname,
+          last: modifiedUser.getLastname,
+        },
+        birth: {
+          date: modifiedUser.getBirthDate,
+          place: modifiedUser.getBirthPlace,
+        },
+        phone: modifiedUser.getPhone,
+        avatar: modifiedUser.getAvatar,
+        size: modifiedUser.getSize,
+        address: modifiedUser.getAdress,
+        gender: modifiedUser.getGender,
+        profession: modifiedUser.getProfession,
+        fathername: modifiedUser.getFathername,
+        mothername: modifiedUser.getMothername,
+        code: modifiedUser.getCode,
+      };
+
+      return new UserEntity(new this.userModel(modifiedUserData));
+    } catch (e) {
+      throw new BadRequestException(`Oops Something went wrong`);
+    }
+  }
+
   async updateByCode(
     userCode: number,
     updateUserDto: UpdateUserDto,
