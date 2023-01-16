@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Admin } from 'src/mongodb/schemas/admin.schema';
 
 export class AdminEntity {
@@ -7,7 +8,9 @@ export class AdminEntity {
   private adminCode: number;
   private userRef: string;
 
+  @Exclude()
   private hash: string;
+
   private hashRt: string;
 
   private bearerRt: string;

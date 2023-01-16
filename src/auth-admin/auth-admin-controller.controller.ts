@@ -27,18 +27,12 @@ export class AuthAdminController {
     return await this.authAdminService.login(loginAdminDto);
   }
 
-  /**
-   * @TOD0 - Implement logout
-   */
   @Post(authAdminRoutes.logout)
   @HttpCode(HttpStatus.OK)
-  async logout(): Promise<any> {
-    return await this.authAdminService.logout();
+  async logout(@GetAdmin('id') adminId: string): Promise<void> {
+    return await this.authAdminService.logout(adminId);
   }
 
-  /**
-   * @TOD0 - Implement refresh
-   */
   @Post(authAdminRoutes.refreshTokens)
   @HttpCode(HttpStatus.OK)
   @PublicRoute()
@@ -53,7 +47,6 @@ export class AuthAdminController {
   /**
    * @TODO - Implement update password
    */
-
   @Patch(authAdminRoutes.updatePassword)
   async updatePassword(): Promise<any> {
     return {

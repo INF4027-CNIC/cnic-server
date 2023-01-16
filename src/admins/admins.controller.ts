@@ -34,8 +34,6 @@ export class AdminsController {
   async findByAdminCode(
     @Param(AdminsController.adminCode, ParseIntPipe) adminCode: number,
   ): Promise<AdminEntity> {
-    console.log({ adminCode });
-
     return this.adminService.findByAdminCode(adminCode);
   }
 

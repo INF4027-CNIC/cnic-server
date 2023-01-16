@@ -44,10 +44,8 @@ export class AuthAdminService {
     }
   }
 
-  async logout(): Promise<any> {
-    return {
-      message: 'Logout successfully',
-    };
+  async logout(adminId: string): Promise<void> {
+    await this.updateRefreshToken(adminId, '');
   }
 
   async refreshTokens(adminId: string, bearerRt: string): Promise<Tokens> {
@@ -72,7 +70,7 @@ export class AuthAdminService {
   async jwtValidateAdmin(adminId: string) {
     const admin = await this.adminService.findOneById(adminId);
 
-    if (!admin || !admin.getHash) return null;
+    if (!admin || !admin.getHashRt) return null;
 
     return admin;
   }
