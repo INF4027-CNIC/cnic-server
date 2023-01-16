@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { AdminEntity } from 'src/admins/entities/admin.entity';
 import { PublicRoute } from 'src/common/decorators';
-import { AuthAdminService } from './auth-admin-service.service';
+import { AuthAdminService } from './auth-admin.service';
 import { GetAdmin } from './decorators';
 import { LoginAdminDto } from './dto';
 import { authAdminRoutes } from './enums';
