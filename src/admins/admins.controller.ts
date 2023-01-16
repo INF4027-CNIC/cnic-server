@@ -5,8 +5,10 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { GetAdmin } from 'src/auth-admin/decorators';
+import { AdminJwtGuard } from 'src/auth-admin/guards';
 import { IsMongodbObjectIdPipe } from 'src/common/pipes';
 import { AdminsService } from './admins.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
@@ -14,6 +16,7 @@ import { AdminEntity } from './entities/admin.entity';
 import { adminRoutes } from './enum/admin-controller';
 
 @Controller(adminRoutes.admins)
+@UseGuards(AdminJwtGuard)
 export class AdminsController {
   private static readonly adminId = 'adminId';
   private static readonly adminCode = 'adminCode';
@@ -21,7 +24,9 @@ export class AdminsController {
   constructor(private readonly adminService: AdminsService) {}
 
   @Get(adminRoutes.me)
-  async me(@GetAdmin() admin: any): Promise<any> {
+  async me(@GetAdmin() admin: AdminEntity): Promise<AdminEntity> {
+    console.log({ admin });
+
     return admin;
   }
 

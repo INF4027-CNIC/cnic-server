@@ -1,6 +1,5 @@
 import {
   Body,
-  ClassSerializerInterceptor,
   Controller,
   DefaultValuePipe,
   Delete,
@@ -9,20 +8,19 @@ import {
   Patch,
   Post,
   Query,
-  UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersRoutes } from './enum';
 import { UserEntity } from './entities';
-import { ApiTags } from '@nestjs/swagger';
 import { IsMongodbObjectIdPipe } from 'src/common/pipes';
 import { CreateUserDto } from './dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdateUserCodeDTO } from './dto/update-code.dto';
+import { AdminJwtGuard } from 'src/auth-admin/guards';
 
 @Controller(UsersRoutes.users)
-@UseInterceptors(ClassSerializerInterceptor)
-@ApiTags('Users')
+@UseGuards(AdminJwtGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
