@@ -42,7 +42,7 @@ export class AdminsService {
 
       const admin = await this.adminModel
         .findById(newAdmin.id)
-        .populate('userRef');
+        .populate('userRef', 'id name code phone');
 
       return new AdminEntity(admin, adminPassword);
     } catch (err) {
@@ -57,7 +57,9 @@ export class AdminsService {
 
   async findAll(): Promise<AdminEntity[]> {
     try {
-      const allAdmins = await this.adminModel.find().populate('userRef');
+      const allAdmins = await this.adminModel
+        .find()
+        .populate('userRef', 'id name code phone');
 
       return allAdmins.map((admin) => new AdminEntity(admin));
     } catch (err) {
@@ -66,11 +68,48 @@ export class AdminsService {
   }
 
   async findOneById(adminId: string): Promise<AdminEntity> {
-    const admin = await this.adminModel.findById(adminId).populate('userRef');
+    try {
+      // const foundAdmin = await this.adminModel
+      //   .findOne({
+      //     _id: adminId,
+      //     isActive: true,
+      //   })
+      //   .populate('userRef', 'id name code phone');
 
-    if (!admin) throw new AdminNotFoundException();
+      const foundAdmin = await this.adminModel
+        .findById(adminId)
+        .where({ isActive: true })
+        .populate('userRef', 'id name code phone');
 
-    return new AdminEntity(admin);
+      if (!foundAdmin) throw new AdminNotFoundException();
+
+      return new AdminEntity(foundAdmin);
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async findByAdminCode(adminCode: number): Promise<AdminEntity> {
+    try {
+      const foundAdmin = await this.adminModel
+        .findOne({
+          adminCode: adminCode,
+          isActive: true,
+        })
+        .populate('userRef', 'id name code phone');
+
+      if (!foundAdmin) throw new AdminNotFoundException();
+
+      return new AdminEntity(foundAdmin);
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async adminExists(adminCode: number): Promise<boolean> {
+    const admin = await this.adminModel.findOne({ adminCode: adminCode });
+
+    return !!admin;
   }
 
   async findByName(name: string): Promise<AdminEntity[]> {

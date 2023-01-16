@@ -1,4 +1,11 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { AuthAdminService } from './auth-admin-service.service';
 import { LoginAdminDto } from './dto';
 import { authAdminRoutes } from './enums';
@@ -29,5 +36,25 @@ export class AuthAdminController {
   @HttpCode(HttpStatus.OK)
   async refresh(): Promise<any> {
     return await this.authAdminService.refresh();
+  }
+
+  /**
+   * @TODO - Implement update password
+   */
+
+  @Patch(authAdminRoutes.updatePassword)
+  async updatePassword(): Promise<any> {
+    return {
+      message: 'Update password successfully',
+    };
+  }
+
+  /**
+   * @TODO - Implement update admin code
+   */
+  async updateAdminCode(): Promise<any> {
+    return {
+      message: 'Update admin code successfully',
+    };
   }
 }

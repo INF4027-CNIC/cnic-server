@@ -3,4 +3,6 @@ export enum authAdminRoutes {
   login = 'login',
   logout = 'logout',
   refresh = 'refresh',
+  updatePassword = 'update-password',
+  updateAdminCode = 'update-admin-code',
 }
