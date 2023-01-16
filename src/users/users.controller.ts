@@ -50,9 +50,7 @@ export class UsersController {
   }
 
   @Get(`${usersController.findByCode}/:userCode`)
-  async findByCode(
-    @Param('userCode', IsMongodbObjectIdPipe) userCode: number,
-  ): Promise<UserEntity> {
+  async findByCode(@Param('userCode') userCode: number): Promise<UserEntity> {
     return this.usersService.findByCode(userCode);
   }
 

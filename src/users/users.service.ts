@@ -61,14 +61,14 @@ export class UsersService {
 
   async findById(userId: string): Promise<any> {
     const user = await this.userModel.findById(userId);
-    if (!user) throw new NotFoundException('User not foud.');
+    if (!user) throw new NotFoundException('User not found.');
     return new UserEntity(user);
   }
 
   async findByCode(userCode: number): Promise<any> {
-    return {
-      message: `findUser with code ${userCode}`,
-    };
+    const user = await this.userModel.findOne({ code: userCode });
+    if (!user) throw new NotFoundException('User not found.');
+    return new UserEntity(user);
   }
 
   async searchByName(username: string): Promise<any[]> {
