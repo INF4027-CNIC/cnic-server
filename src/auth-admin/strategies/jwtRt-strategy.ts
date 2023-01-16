@@ -36,6 +36,8 @@ export class JwtRefreshStrategy extends PassportStrategy(
 
     if (!admin) throw new UnauthorizedException('Not authorized.');
 
+    admin.setBearerRt(bearerRefreshToken);
+
     return admin;
   }
 }

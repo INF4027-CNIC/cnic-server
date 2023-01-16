@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ADMIN as ADMINS_MODEL_TEKEN } from 'src/admins/admins.constant';
@@ -46,10 +50,23 @@ export class AuthAdminService {
     };
   }
 
-  async refresh(): Promise<any> {
-    return {
-      message: 'Refresh successfully',
-    };
+  async refreshTokens(adminId: string, bearerRt: string): Promise<Tokens> {
+    try {
+      const admin = await this.adminService.findOneById(adminId);
+
+      const isRtValid = await argon.verify(admin.getHashRt, bearerRt);
+
+      if (!isRtValid)
+        throw new ForbiddenException('Acces denied to refresh your token.');
+
+      const tokens = await this.generateToken(admin.getId, admin.getAdminCode);
+
+      await this.updateRefreshToken(adminId, tokens.refresh_token);
+
+      return tokens;
+    } catch (err) {
+      throw err;
+    }
   }
 
   async jwtValidateAdmin(adminId: string) {
@@ -63,9 +80,9 @@ export class AuthAdminService {
   async jwtRefreshValidateAdmin(adminId: string, bearerRt: string) {
     const admin = await this.adminService.findOneById(adminId);
 
-    if (!admin || !admin.getHash) return null;
+    if (!admin || !admin.getHashRt) return null;
 
-    const isRtMatched = await argon.verify(admin.getHash, bearerRt);
+    const isRtMatched = await argon.verify(admin.getHashRt, bearerRt);
 
     if (!isRtMatched) return null;
 
