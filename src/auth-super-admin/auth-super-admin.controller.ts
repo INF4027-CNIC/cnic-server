@@ -1,5 +1,5 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { AuthSuperAdminService } from './auth-super-admin-service.service';
+import { AuthSuperAdminService } from './auth-super-admin.service';
 import { LoginSuperAdminDto } from './dto';
 import { authSuperAdminRoutes } from './enums';
 import { PublicRoute } from '../common/decorators/public.dcorator';
