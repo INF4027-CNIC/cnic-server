@@ -62,6 +62,8 @@ export class UserEntity {
 
   constructor(userData: User) {
     this.init(userData);
+
+    console.log({ userData });
   }
 
   init(userData: User) {

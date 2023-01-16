@@ -9,6 +9,7 @@ export const UserSchema = new mongoose.Schema<User>({
       index: true,
       require: true,
       trim: true,
+      lowercase: true,
     },
     last: {
       type: String,
@@ -16,6 +17,7 @@ export const UserSchema = new mongoose.Schema<User>({
       index: true,
       require: true,
       trim: true,
+      lowercase: true,
     },
   },
 

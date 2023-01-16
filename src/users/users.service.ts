@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CredentialsTaken } from 'src/common/exceptions';
+import { CredentialsTaken, DefaultHttpException } from 'src/common/exceptions';
 import { exceptionsCodes } from 'src/mongodb/enum';
 import { User } from 'src/mongodb/schemas';
 import { CreateUserDto } from './dto';
@@ -15,10 +15,27 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<any> {
-    try {
-      const newUser = new this.userModel(createUserDto);
+    const userData = {
+      name: {
+        first: createUserDto.firstname,
+        last: createUserDto.lastname,
+      },
+      birth: {
+        date: createUserDto.birthDate,
+        place: createUserDto.birthPlace,
+      },
+      phone: createUserDto.phone,
+      avatar: createUserDto.avatar,
+      size: createUserDto.size,
+      address: createUserDto.address,
+      gender: createUserDto.gender,
+      profession: createUserDto.profession,
+      fathername: createUserDto.fathername,
+      mothername: createUserDto.mothername,
+    };
 
-      console.log({ newUser });
+    try {
+      const newUser = new this.userModel(userData);
 
       await newUser.save();
 
@@ -26,6 +43,8 @@ export class UsersService {
     } catch (err) {
       if (err.code === exceptionsCodes.duplicatePropertyValue)
         throw new CredentialsTaken();
+
+      throw new DefaultHttpException();
     }
   }
 

@@ -1,5 +1,6 @@
 import mongoose, { SchemaTypes } from 'mongoose';
 import { Roles } from 'src/common/enums';
+import { generateUUID } from 'src/common/helpers';
 import { USER } from 'src/users/users.costants';
 
 export const AdminSchema = new mongoose.Schema({
@@ -40,9 +41,11 @@ export const AdminSchema = new mongoose.Schema({
 export interface Admin {
   id: string;
 
-  userRef: string;
-
   isActive: boolean;
+
+  password: string;
+
+  userRef: string;
 
   metadata: {
     nominateAt: Date;

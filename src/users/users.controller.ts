@@ -15,6 +15,7 @@ import { UserEntity } from './entities';
 import { ApiTags } from '@nestjs/swagger';
 import { IsMongodbObjectIdPipe } from 'src/common/pipes';
 import { CreateUserDto } from './dto';
+import { updateUserDto } from './dto/update-user.dto';
 
 @Controller(usersController.users)
 @UseInterceptors(ClassSerializerInterceptor)
@@ -51,5 +52,11 @@ export class UsersController {
     @Param('userCode', IsMongodbObjectIdPipe) userCode: number,
   ): Promise<UserEntity> {
     return this.usersService.findByCode(userCode);
+  }
+
+  async update(@Body() updateUserDto: updateUserDto) {
+    return {
+      message: 'update user',
+    };
   }
 }
