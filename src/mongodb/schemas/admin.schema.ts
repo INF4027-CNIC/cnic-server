@@ -1,11 +1,18 @@
 import mongoose, { SchemaTypes } from 'mongoose';
 import { Roles } from 'src/common/enums';
-import { generateUUID } from 'src/common/helpers';
 import { USER } from 'src/users/users.costants';
 
 export const AdminSchema = new mongoose.Schema({
+  adminCode: {
+    type: Number,
+    default: () => Date.now() + Math.floor(Math.random() * 100),
+    unique: true,
+    immutable: true,
+  },
+
   userRef: {
     type: SchemaTypes.ObjectId,
+    unique: true,
     ref: USER,
   },
 
@@ -33,9 +40,15 @@ export const AdminSchema = new mongoose.Schema({
     default: [Roles.Admin, Roles.User],
   },
 
-  hash: String,
+  hash: {
+    type: String,
+    default: '',
+  },
 
-  hashRt: String,
+  hashRt: {
+    type: String,
+    default: '',
+  },
 });
 
 export interface Admin {
@@ -44,6 +57,8 @@ export interface Admin {
   isActive: boolean;
 
   password: string;
+
+  adminCode: number;
 
   userRef: string;
 

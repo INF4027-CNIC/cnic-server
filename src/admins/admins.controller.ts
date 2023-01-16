@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
+import { GetAdmin } from 'src/auth-admin/decorators';
+import { IsMongodbObjectIdPipe } from 'src/common/pipes';
 import { AdminsService } from './admins.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { AdminEntity } from './entities/admin.entity';
@@ -7,34 +16,53 @@ import { adminRoutes } from './enum/admin-controller';
 @Controller(adminRoutes.admins)
 export class AdminsController {
   private static readonly adminId = 'adminId';
+  private static readonly adminCode = 'adminCode';
 
   constructor(private readonly adminService: AdminsService) {}
+
+  @Get(adminRoutes.me)
+  async me(@GetAdmin() admin: any): Promise<any> {
+    return admin;
+  }
 
   @Post(adminRoutes.create)
   async create(@Body() createAdminDto: CreateAdminDto): Promise<AdminEntity> {
     return this.adminService.create(createAdminDto);
   }
 
-  // @Get(adminRoutes.findAll)
-  // async findAll() {
-  //   return [
-  //     {
-  //       message: 'find all',
-  //     },
-  //   ];
-  // }
+  @Get(`${adminRoutes.findByAdminCode}/:${AdminsController.adminCode}`)
+  async findByAdminCode(
+    @Param(AdminsController.adminCode, ParseIntPipe) adminCode: number,
+  ): Promise<AdminEntity> {
+    console.log({ adminCode });
 
-  // @Get(`${adminRoutes.findOneById}/${AdminsController.adminId}`)
-  // async findOneById(
-  //   @Param(AdminsController.adminId) adminId: string,
-  // ): Promise<any> {
-  //   return {
-  //     message: adminId,
-  //   };
-  // }
+    return this.adminService.findByAdminCode(adminCode);
+  }
 
-  // @Get(`${adminRoutes.findByName}`)
-  // async findByName(): Promise<any[]> {
-  //   //
-  // }
+  @Get(`${adminRoutes.findOneById}/:${AdminsController.adminId}`)
+  async findOneById(
+    @Param(AdminsController.adminId, IsMongodbObjectIdPipe) adminId: string,
+  ): Promise<any> {
+    return this.adminService.findOneById(adminId);
+  }
+
+  /**
+   * @TODO - implement this method
+   */
+  @Get(adminRoutes.findAll)
+  async findAll() {
+    return [
+      {
+        message: 'find all',
+      },
+    ];
+  }
+
+  /**
+   * @TODO - implement this method
+   */
+  @Get(`${adminRoutes.findByName}`)
+  async findByName() {
+    //
+  }
 }
