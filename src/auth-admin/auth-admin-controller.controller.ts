@@ -10,10 +10,7 @@ export class AuthAdminController {
   @Post(authAdminRoutes.login)
   @HttpCode(HttpStatus.OK)
   async login(@Body() loginAdminDto: LoginAdminDto): Promise<any> {
-    return await this.authAdminService.login(
-      loginAdminDto.code,
-      loginAdminDto.password,
-    );
+    return await this.authAdminService.login(loginAdminDto);
   }
 
   /**

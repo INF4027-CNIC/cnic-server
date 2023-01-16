@@ -6,6 +6,7 @@ import { AdminEntity } from 'src/admins/entities/admin.entity';
 import { AdminNotFoundException } from 'src/admins/exceptions';
 import { isPasswordMatched } from 'src/common/helpers';
 import { Admin } from 'src/mongodb/schemas/admin.schema';
+import { LoginAdminDto } from './dto';
 
 @Injectable()
 export class AuthAdminService {
@@ -13,9 +14,11 @@ export class AuthAdminService {
     @InjectModel(ADMINS_MODEL_TEKEN) private readonly adminModel: Model<Admin>,
   ) {}
 
-  async login(code: string, password: string): Promise<any> {
+  async login(logingAdminDto: LoginAdminDto): Promise<any> {
+    const { adminCode, password } = logingAdminDto;
+
     const admin = await this.adminModel
-      .findOne({ code: code })
+      .findOne({ code: adminCode })
       .populate('userRef');
 
     if (!admin) throw new AdminNotFoundException();

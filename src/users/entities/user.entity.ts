@@ -22,6 +22,9 @@ export class UserEntity {
   private avatar: string;
 
   @ApiProperty()
+  private code: number;
+
+  @ApiProperty()
   private birthDate: number;
 
   @ApiProperty()
@@ -72,6 +75,7 @@ export class UserEntity {
     this.lastname = userData.name.last;
     this.phone = userData.phone;
     this.avatar = userData.avatar;
+    this.code = userData.code;
 
     this.birthDate = userData.birth.date;
     this.birthPlace = userData.birth.place;
@@ -125,6 +129,10 @@ export class UserEntity {
 
   get getAvatar() {
     return this.avatar;
+  }
+
+  get getCode(): number {
+    return this.code;
   }
 
   get getBirthDate(): number {
