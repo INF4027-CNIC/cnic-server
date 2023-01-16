@@ -54,12 +54,20 @@ export class UsersController {
     return this.usersService.findByCode(userCode);
   }
 
-  @Patch(`${usersController.update}/:userId`)
-  async update(
+  @Patch(`${usersController.updateById}/:userId`)
+  async updateById(
     @Param('userId', IsMongodbObjectIdPipe) userId: string,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<UserEntity> {
-    return this.usersService.update(userId, updateUserDto);
+    return this.usersService.updateById(userId, updateUserDto);
+  }
+
+  @Patch(`${usersController.updateByCode}/:userCode`)
+  async updateByCode(
+    @Param('userCode') userCode: number,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Promise<UserEntity> {
+    return this.usersService.updateByCode(userCode, updateUserDto);
   }
 
   @Delete(`${usersController.delete}/:userId`)

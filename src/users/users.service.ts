@@ -100,7 +100,7 @@ export class UsersService {
     return { data: true };
   }
 
-  async update(
+  async updateById(
     userId: string,
     updateUserDto: UpdateUserDto,
   ): Promise<UserEntity> {
@@ -156,6 +156,87 @@ export class UsersService {
       );
 
       const modifiedUser = await this.findById(userId);
+
+      const modifiedUserData = {
+        name: {
+          first: modifiedUser.getFistname,
+          last: modifiedUser.getLastname,
+        },
+        birth: {
+          date: modifiedUser.getBirthDate,
+          place: modifiedUser.getBirthPlace,
+        },
+        phone: modifiedUser.getPhone,
+        avatar: modifiedUser.getAvatar,
+        size: modifiedUser.getSize,
+        address: modifiedUser.getAdress,
+        gender: modifiedUser.getGender,
+        profession: modifiedUser.getProfession,
+        fathername: modifiedUser.getFathername,
+        mothername: modifiedUser.getMothername,
+      };
+
+      return new UserEntity(new this.userModel(modifiedUserData));
+    } catch (e) {
+      throw new BadRequestException(`Oops Something went wrong`);
+    }
+  }
+  async updateByCode(
+    userCode: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserEntity> {
+    const userData = {
+      name: {
+        first: updateUserDto.firstname,
+        last: updateUserDto.lastname,
+      },
+      birth: {
+        date: updateUserDto.birthDate,
+        place: updateUserDto.birthPlace,
+      },
+      phone: updateUserDto.phone,
+      avatar: updateUserDto.avatar,
+      size: updateUserDto.size,
+      address: updateUserDto.address,
+      gender: updateUserDto.gender,
+      profession: updateUserDto.profession,
+      fathername: updateUserDto.fathername,
+      mothername: updateUserDto.mothername,
+    };
+
+    try {
+      const searchedUser = await this.findByCode(userCode);
+
+      if (!searchedUser)
+        throw new NotFoundException(
+          `The user with Numeric code ${userCode} doesn't exist`,
+        );
+
+      await this.userModel.updateOne(
+        { code: userCode },
+        {
+          $set: {
+            name: {
+              first: userData.name.first,
+              last: userData.name.last,
+            },
+            birth: {
+              date: userData.birth.date,
+              place: userData.birth.place,
+            },
+            phone: userData.phone,
+            avatar: userData.avatar,
+            size: userData.size,
+            address: userData.address,
+            gender: userData.gender,
+            profession: userData.profession,
+            fathername: userData.fathername,
+            mothername: userData.mothername,
+          },
+        },
+      );
+
+      const modifiedUser = await this.findByCode(userCode);
 
       const modifiedUserData = {
         name: {
