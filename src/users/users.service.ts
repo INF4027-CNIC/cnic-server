@@ -1,10 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CredentialsTaken, DefaultHttpException } from 'src/common/exceptions';
 import { exceptionsCodes } from 'src/mongodb/enum';
 import { User } from 'src/mongodb/schemas';
 import { CreateUserDto } from './dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities';
 import { USER as USER_MODEL_TOKEN } from './users.costants';
 
@@ -55,13 +60,9 @@ export class UsersService {
   }
 
   async findById(userId: string): Promise<any> {
-    // const user = await this.userModel.findById(userId);
-    // if (!user) throw new NotFoundException('User not foud.');
-    // return new UserEntity(user);
-
-    return {
-      message: `findUser with id ${userId}`,
-    };
+    const user = await this.userModel.findById(userId);
+    if (!user) throw new NotFoundException('User not foud.');
+    return new UserEntity(user);
   }
 
   async findByCode(userCode: number): Promise<any> {
@@ -92,14 +93,107 @@ export class UsersService {
   }
 
   async isUserExist(userId: string) {
-    // const user = await this.userModel.findById<User>(userId);
+    const user = await this.userModel.findById<User>(userId);
 
-    // if (!user) return { data: false };
+    if (!user) return { data: false };
 
-    // return { data: true };
+    return { data: true };
+  }
 
-    return {
-      message: `check user exist id ${userId}`,
+  async update(
+    userId: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserEntity> {
+    const userData = {
+      name: {
+        first: updateUserDto.firstname,
+        last: updateUserDto.lastname,
+      },
+      birth: {
+        date: updateUserDto.birthDate,
+        place: updateUserDto.birthPlace,
+      },
+      phone: updateUserDto.phone,
+      avatar: updateUserDto.avatar,
+      size: updateUserDto.size,
+      address: updateUserDto.address,
+      gender: updateUserDto.gender,
+      profession: updateUserDto.profession,
+      fathername: updateUserDto.fathername,
+      mothername: updateUserDto.mothername,
     };
+
+    try {
+      const searchedUser = await this.findById(userId);
+
+      if (!searchedUser)
+        throw new NotFoundException(
+          `The user with identifier ${userId} doesn't exist`,
+        );
+
+      await this.userModel.updateOne(
+        { _id: userId },
+        {
+          $set: {
+            name: {
+              first: userData.name.first,
+              last: userData.name.last,
+            },
+            birth: {
+              date: userData.birth.date,
+              place: userData.birth.place,
+            },
+            phone: userData.phone,
+            avatar: userData.avatar,
+            size: userData.size,
+            address: userData.address,
+            gender: userData.gender,
+            profession: userData.profession,
+            fathername: userData.fathername,
+            mothername: userData.mothername,
+          },
+        },
+      );
+
+      const modifiedUser = await this.findById(userId);
+
+      const modifiedUserData = {
+        name: {
+          first: modifiedUser.getFistname,
+          last: modifiedUser.getLastname,
+        },
+        birth: {
+          date: modifiedUser.getBirthDate,
+          place: modifiedUser.getBirthPlace,
+        },
+        phone: modifiedUser.getPhone,
+        avatar: modifiedUser.getAvatar,
+        size: modifiedUser.getSize,
+        address: modifiedUser.getAdress,
+        gender: modifiedUser.getGender,
+        profession: modifiedUser.getProfession,
+        fathername: modifiedUser.getFathername,
+        mothername: modifiedUser.getMothername,
+      };
+
+      return new UserEntity(new this.userModel(modifiedUserData));
+    } catch (e) {
+      throw new BadRequestException(`Oops Something went wrong`);
+    }
+  }
+
+  async delete(userId: string): Promise<void> {
+    try {
+      const searchedUser = await this.isUserExist(userId);
+
+      if (!searchedUser)
+        throw new NotFoundException(
+          `The user with identifier ${userId} not found`,
+        );
+
+      await this.userModel.deleteOne({ _id: userId });
+    } catch (e) {
+      throw new BadRequestException('Oops somethin went wrong');
+    }
   }
 }

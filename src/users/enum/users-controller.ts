@@ -4,4 +4,6 @@ export enum usersController {
   searchByName = 'search-by-name',
   findById = 'find-by-id',
   findByCode = 'find-by-code',
+  update = 'update',
+  delete = 'delete',
 }

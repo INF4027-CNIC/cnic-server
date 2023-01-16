@@ -3,8 +3,10 @@ import {
   ClassSerializerInterceptor,
   Controller,
   DefaultValuePipe,
+  Delete,
   Get,
   Param,
+  Patch,
   Post,
   Query,
   UseInterceptors,
@@ -15,7 +17,7 @@ import { UserEntity } from './entities';
 import { ApiTags } from '@nestjs/swagger';
 import { IsMongodbObjectIdPipe } from 'src/common/pipes';
 import { CreateUserDto } from './dto';
-import { updateUserDto } from './dto/update-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller(usersController.users)
 @UseInterceptors(ClassSerializerInterceptor)
@@ -40,23 +42,32 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Get(`/${usersController.findById}/:userId`)
+  @Get(`${usersController.findById}/:userId`)
   async findById(
     @Param('userId', IsMongodbObjectIdPipe) userId: string,
   ): Promise<UserEntity> {
     return this.usersService.findById(userId);
   }
 
-  @Get(`/${usersController.findByCode}/:userCode`)
+  @Get(`${usersController.findByCode}/:userCode`)
   async findByCode(
     @Param('userCode', IsMongodbObjectIdPipe) userCode: number,
   ): Promise<UserEntity> {
     return this.usersService.findByCode(userCode);
   }
 
-  async update(@Body() updateUserDto: updateUserDto) {
-    return {
-      message: 'update user',
-    };
+  @Patch(`${usersController.update}/:userId`)
+  async update(
+    @Param('userId', IsMongodbObjectIdPipe) userId: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Promise<UserEntity> {
+    return this.usersService.update(userId, updateUserDto);
+  }
+
+  @Delete(`${usersController.delete}/:userId`)
+  async delete(
+    @Param('userId', IsMongodbObjectIdPipe) userId: string,
+  ): Promise<void> {
+    this.usersService.delete(userId);
   }
 }
