@@ -61,7 +61,6 @@ export const UserSchema = new mongoose.Schema<User>({
     type: Number,
     default: () => Date.now() + Math.floor(Math.random() * 100),
     unique: true,
-    immutable: true,
   },
 
   address: {
@@ -82,8 +81,8 @@ export const UserSchema = new mongoose.Schema<User>({
   metadata: {
     createdAt: {
       type: Date,
-      immutable: true,
       default: () => Date.now(),
+      immutable: true,
     },
 
     updatedAt: {
