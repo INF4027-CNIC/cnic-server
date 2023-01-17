@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Admin } from 'src/mongodb/schemas/admin.schema';
 
 export class AdminEntity {
@@ -6,7 +7,13 @@ export class AdminEntity {
   private password: string;
   private adminCode: number;
   private userRef: string;
+
+  @Exclude()
   private hash: string;
+
+  private hashRt: string;
+
+  private bearerRt: string;
 
   constructor(adminData: Admin, password?: string) {
     this.init(adminData, password);
@@ -19,6 +26,7 @@ export class AdminEntity {
     this.password = password && password;
     this.adminCode = adminData.adminCode;
     this.hash = adminData.hash;
+    this.hashRt = adminData.hashRt;
   }
 
   get getId(): string {
@@ -43,5 +51,17 @@ export class AdminEntity {
 
   get getHash(): string {
     return this.hash;
+  }
+
+  get getHashRt(): string {
+    return this.hashRt;
+  }
+
+  get getBearerRt(): string {
+    return this.bearerRt;
+  }
+
+  setBearerRt(bearerRt: string) {
+    this.bearerRt = bearerRt;
   }
 }

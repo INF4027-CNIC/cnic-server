@@ -1,7 +1,9 @@
 export enum adminRoutes {
   admins = 'admins',
+  me = 'me',
   create = 'create',
-  findAll = 'findAll',
-  findOneById = 'findOne',
-  findByName = 'findByName',
+  findAll = 'all',
+  findOneById = 'find-by-id',
+  findByName = 'find-by-name',
+  findByAdminCode = 'find-by-admin-code',
 }

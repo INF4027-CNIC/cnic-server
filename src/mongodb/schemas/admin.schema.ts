@@ -40,9 +40,15 @@ export const AdminSchema = new mongoose.Schema({
     default: [Roles.Admin, Roles.User],
   },
 
-  hash: String,
+  hash: {
+    type: String,
+    default: '',
+  },
 
-  hashRt: String,
+  hashRt: {
+    type: String,
+    default: '',
+  },
 });
 
 export interface Admin {

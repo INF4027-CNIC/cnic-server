@@ -1,70 +1,112 @@
 import {
   Body,
-  ClassSerializerInterceptor,
   Controller,
   DefaultValuePipe,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Patch,
   Post,
   Query,
-  UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { usersController } from './enum';
+import { UsersRoutes } from './enum';
 import { UserEntity } from './entities';
-import { ApiTags } from '@nestjs/swagger';
 import { IsMongodbObjectIdPipe } from 'src/common/pipes';
 import { CreateUserDto } from './dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserCodeDTO } from './dto/update-code.dto';
+import { AdminJwtGuard } from 'src/auth-admin/guards';
+import {
+  SwaggerGetUsersDoc,
+  SwaggerPatchUsersDoc,
+  SwaggerPostUsersDoc,
+  SwaggerDeleteUsersDoc,
+  SwaggerPatchCodeUsersDoc,
+} from './decorators/swagger-doc.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller(usersController.users)
-@UseInterceptors(ClassSerializerInterceptor)
+@Controller(UsersRoutes.users)
 @ApiTags('Users')
+@UseGuards(AdminJwtGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post(usersController.create)
+  @Post(UsersRoutes.create)
+  @HttpCode(HttpStatus.CREATED)
+  @SwaggerPostUsersDoc()
   async create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
-  @Get(usersController.searchByName)
+  @Get(UsersRoutes.searchByName)
+  @HttpCode(HttpStatus.OK)
+  @SwaggerGetUsersDoc()
   async searchByName(
     @Query('fullname', new DefaultValuePipe('')) fullname: string,
   ): Promise<UserEntity[]> {
     return this.usersService.searchByName(fullname);
   }
 
-  @Get()
-  async findAll() {
+  @Get(UsersRoutes.allUsers)
+  @HttpCode(HttpStatus.OK)
+  @SwaggerGetUsersDoc()
+  async findAll(): Promise<UserEntity[]> {
     return this.usersService.findAll();
   }
 
-  @Get(`${usersController.findById}/:userId`)
+  @Get(`${UsersRoutes.findById}/:userId`)
+  @HttpCode(HttpStatus.OK)
+  @SwaggerGetUsersDoc(true)
   async findById(
     @Param('userId', IsMongodbObjectIdPipe) userId: string,
   ): Promise<UserEntity> {
     return this.usersService.findById(userId);
   }
 
-  @Get(`${usersController.findByCode}/:userCode`)
-  async findByCode(
-    @Param('userCode', IsMongodbObjectIdPipe) userCode: number,
-  ): Promise<UserEntity> {
+  @Get(`${UsersRoutes.findByCode}/:userCode`)
+  @HttpCode(HttpStatus.OK)
+  @SwaggerGetUsersDoc(true)
+  async findByCode(@Param('userCode') userCode: number): Promise<UserEntity> {
     return this.usersService.findByCode(userCode);
   }
 
-  @Patch(`${usersController.update}/:userId`)
-  async update(
+  @Patch(`${UsersRoutes.updateById}/:userId`)
+  @HttpCode(HttpStatus.OK)
+  @SwaggerPatchUsersDoc()
+  async updateById(
     @Param('userId', IsMongodbObjectIdPipe) userId: string,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<UserEntity> {
-    return this.usersService.update(userId, updateUserDto);
+    return this.usersService.updateById(userId, updateUserDto);
   }
 
-  @Delete(`${usersController.delete}/:userId`)
+  @Patch(`${UsersRoutes.updateCodeById}/:userId`)
+  @HttpCode(HttpStatus.OK)
+  @SwaggerPatchCodeUsersDoc()
+  async updateUserCodeById(
+    @Param('userId', IsMongodbObjectIdPipe) userId: string,
+    @Body() userCode: UpdateUserCodeDTO,
+  ): Promise<UserEntity> {
+    return this.usersService.updateUserCodeById(userId, userCode);
+  }
+
+  @Patch(`${UsersRoutes.updateByCode}/:userCode`)
+  @HttpCode(HttpStatus.OK)
+  @SwaggerPatchUsersDoc()
+  async updateByCode(
+    @Param('userCode') userCode: number,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Promise<UserEntity> {
+    return this.usersService.updateByCode(userCode, updateUserDto);
+  }
+
+  @Delete(`${UsersRoutes.delete}/:userId`)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @SwaggerDeleteUsersDoc()
   async delete(
     @Param('userId', IsMongodbObjectIdPipe) userId: string,
   ): Promise<void> {
