@@ -26,4 +26,18 @@ export class SuperAdminsService {
       throw err;
     }
   }
+
+  async findOneByEmail(email: string): Promise<SuperAdminEntity> {
+    try {
+      const foundSuperAdmin = await this.superAdminModel.findOne<SuperAdmin>({
+        email,
+      });
+
+      if (!foundSuperAdmin) throw new SuperAdminNotFoundException();
+
+      return new SuperAdminEntity(foundSuperAdmin);
+    } catch (err) {
+      throw err;
+    }
+  }
 }

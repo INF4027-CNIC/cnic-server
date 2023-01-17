@@ -1,36 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Tokens } from 'src/auth-admin/types';
 import { SuperAdmin } from 'src/mongodb/schemas';
+import { SuperAdminEntity } from 'src/super-admins/entities';
+import { SuperAdminsService } from 'src/super-admins/super-admins.service';
 import { SUPER_ADMIN as SUPER_ADMIN_MODEL_TOKEN } from './auth-super-admin.contants';
 import { LoginSuperAdminDto } from './dto';
 import { JwtPayload } from './types';
+import * as argon from 'argon2';
 
 @Injectable()
 export class AuthSuperAdminService {
   constructor(
     @InjectModel(SUPER_ADMIN_MODEL_TOKEN)
     private readonly superAdminModel: Model<SuperAdmin>,
+    private readonly superAdminService: SuperAdminsService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}
 
-  async login(loginSuperAdminDto: LoginSuperAdminDto): Promise<any> {
-    return loginSuperAdminDto;
-    // try {
-    //   const { email, password } = loginSuperAdminDto;
-    //   const admin = await this.adminService.findByAdminCode(adminCode);
-    //   const isPasswordValid = await isPasswordMatched(password, admin.getHash);
-    //   if (!isPasswordValid) throw new UnauthorizedException('invalid password');
-    //   const tokens = await this.generateToken(admin.getId, admin.getAdminCode);
-    //   await this.updateRefreshToken(admin.getId, tokens.refresh_token);
-    //   return tokens;
-    // } catch (err) {
-    //   throw err;
-    // }
+  async login(loginSuperAdminDto: LoginSuperAdminDto): Promise<Tokens> {
+    try {
+      const { email, password } = loginSuperAdminDto;
+
+      const superAdmin = await this.superAdminService.findOneByEmail(email);
+
+      if (password !== superAdmin.getPassword)
+        throw new UnauthorizedException('invalid password');
+
+      const tokens = await this.generateToken(
+        superAdmin.getId,
+        superAdmin.getEmail,
+      );
+
+      await this.updateRefreshToken(superAdmin.getId, tokens.refresh_token);
+
+      return tokens;
+    } catch (err) {
+      throw err;
+    }
   }
 
   async logout(): Promise<any> {
@@ -67,5 +78,20 @@ export class AuthSuperAdminService {
     ]);
 
     return { access_token, refresh_token };
+  }
+
+  private async updateRefreshToken(
+    superAdminId: string,
+    refreshToken: string,
+  ): Promise<void> {
+    let hashRt = '';
+
+    if (refreshToken) hashRt = await argon.hash(refreshToken);
+
+    const superAdmin = await this.superAdminModel.findById(superAdminId);
+
+    superAdmin.hashRt = hashRt;
+
+    await superAdmin.save();
   }
 }

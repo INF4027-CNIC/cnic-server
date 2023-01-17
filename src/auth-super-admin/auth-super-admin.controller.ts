@@ -1,4 +1,5 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Tokens } from 'src/auth-admin/types';
 import { PublicRoute } from 'src/common/decorators';
 import { AuthSuperAdminService } from './auth-super-admin.service';
 import { LoginSuperAdminDto } from './dto';
@@ -11,7 +12,7 @@ export class AuthSuperAdminController {
   @Post(authSuperAdminRoutes.login)
   @HttpCode(HttpStatus.OK)
   @PublicRoute()
-  async login(@Body() loginSuperAdminDto: LoginSuperAdminDto): Promise<any> {
+  async login(@Body() loginSuperAdminDto: LoginSuperAdminDto): Promise<Tokens> {
     return this.authSuperAdminService.login(loginSuperAdminDto);
   }
 

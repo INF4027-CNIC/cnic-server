@@ -24,6 +24,12 @@ export const SuperAdminSchema = new mongoose.Schema<SuperAdmin>({
     required: true,
     trim: true,
   },
+
+  hashRt: {
+    type: String,
+    required: true,
+    trim: true,
+  },
 });
 
 export interface SuperAdmin {
@@ -32,4 +38,5 @@ export interface SuperAdmin {
   lastname: string;
   email: string;
   password: string;
+  hashRt: string;
 }
