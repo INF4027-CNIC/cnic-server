@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { Roles } from 'src/common/enums';
 
 export const SuperAdminSchema = new mongoose.Schema<SuperAdmin>({
   firstname: {
@@ -17,6 +18,11 @@ export const SuperAdminSchema = new mongoose.Schema<SuperAdmin>({
     unique: true,
     trim: true,
     lowercase: true,
+  },
+
+  roles: {
+    type: [String],
+    default: [Roles.SuperAdmin, Roles.Admin, Roles.User],
   },
 
   password: {
@@ -39,4 +45,5 @@ export interface SuperAdmin {
   email: string;
   password: string;
   hashRt: string;
+  roles: string[];
 }

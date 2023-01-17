@@ -47,4 +47,8 @@ export class SuperAdminEntity {
   get getHashRt(): string {
     return this.hashRt;
   }
+
+  setBearerRt(bearerRt: string) {
+    this.hashRt = bearerRt;
+  }
 }

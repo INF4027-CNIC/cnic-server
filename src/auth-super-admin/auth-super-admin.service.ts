@@ -5,12 +5,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Tokens } from 'src/auth-admin/types';
 import { SuperAdmin } from 'src/mongodb/schemas';
-import { SuperAdminEntity } from 'src/super-admins/entities';
 import { SuperAdminsService } from 'src/super-admins/super-admins.service';
 import { SUPER_ADMIN as SUPER_ADMIN_MODEL_TOKEN } from './auth-super-admin.contants';
 import { LoginSuperAdminDto } from './dto';
 import { JwtPayload } from './types';
 import * as argon from 'argon2';
+import { SuperAdminEntity } from 'src/super-admins/entities';
 
 @Injectable()
 export class AuthSuperAdminService {
@@ -54,6 +54,31 @@ export class AuthSuperAdminService {
     return {
       message: 'refreshing',
     };
+  }
+
+  async jwtValidateSuperAdmin(superAdminId: string): Promise<SuperAdminEntity> {
+    const superAdmin = await this.superAdminService.findOneById(superAdminId);
+
+    console.log({ superAdmin });
+
+    if (!superAdmin || !superAdmin.getHashRt) return null;
+
+    return superAdmin;
+  }
+
+  async jwtRefreshValidateSuperAdmin(
+    superAdminId: string,
+    bearerRt: string,
+  ): Promise<SuperAdminEntity> {
+    const superAdmin = await this.superAdminService.findOneById(superAdminId);
+
+    if (!superAdmin || !superAdmin.getHashRt) return null;
+
+    const isRtMatched = await argon.verify(superAdmin.getHashRt, bearerRt);
+
+    if (!isRtMatched) return null;
+
+    return superAdmin;
   }
 
   private async generateToken(
