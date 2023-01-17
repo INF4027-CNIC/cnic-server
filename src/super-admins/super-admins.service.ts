@@ -12,7 +12,7 @@ export class SuperAdminsService {
     private readonly superAdminModel: Model<SuperAdmin>,
   ) {}
 
-  async login(loginSuperAdminDto: LoginAdminDto) {
-    return loginSuperAdminDto;
+  async findOneById(adminId: string) {
+    //
   }
 }
