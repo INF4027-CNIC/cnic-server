@@ -1,5 +1,6 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -16,6 +17,18 @@ async function bootstrap() {
       },
     }),
   );
+
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('CNIC-Server Users Service')
+    .setDescription(
+      'CNIC is an application to digitize the system of issuing and presenting national identity cards in cameroon. This is a university project and this repository represents the server(backend) part.',
+    )
+    .setVersion('1.0')
+    .addTag('Users.')
+    .build();
+
+  const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('swagger', app, swaggerDocument);
 
   await app.listen(3000);
 }
