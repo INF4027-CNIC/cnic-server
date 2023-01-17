@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { SuperAdmin } from 'src/mongodb/schemas';
-import { LoginAdminDto } from './dto';
+import { SuperAdminEntity } from './entities';
+import { SuperAdminNotFoundException } from './exceptions';
 import { SUPER_ADMIN } from './super-admin.constant';
 
 @Injectable()
@@ -12,7 +13,17 @@ export class SuperAdminsService {
     private readonly superAdminModel: Model<SuperAdmin>,
   ) {}
 
-  async findOneById(adminId: string) {
-    //
+  async findOneById(superAdminId: string): Promise<SuperAdminEntity> {
+    try {
+      const foundSuperAdmin = await this.superAdminModel.findById<SuperAdmin>(
+        superAdminId,
+      );
+
+      if (!foundSuperAdmin) throw new SuperAdminNotFoundException(superAdminId);
+
+      return new SuperAdminEntity(foundSuperAdmin);
+    } catch (err) {
+      throw err;
+    }
   }
 }

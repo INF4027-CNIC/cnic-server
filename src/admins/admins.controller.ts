@@ -25,8 +25,6 @@ export class AdminsController {
 
   @Get(adminRoutes.me)
   async me(@GetAdmin() admin: AdminEntity): Promise<AdminEntity> {
-    console.log({ admin });
-
     return admin;
   }
 

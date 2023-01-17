@@ -1,4 +1,4 @@
 export enum SuperAdminRoutes {
   superAdmins = 'super-admins',
-  login = 'login',
+  findById = 'find-by-id',
 }

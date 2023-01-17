@@ -1,15 +1,20 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { LoginSuperAdminDto } from 'src/auth-super-admin/dto';
+import { Controller, Get, Param } from '@nestjs/common';
+import { IsMongodbObjectIdPipe } from 'src/common/pipes';
+import { SuperAdminEntity } from './entities';
 import { SuperAdminRoutes } from './enums/superAdminRoutes';
 import { SuperAdminsService } from './super-admins.service';
 
 @Controller(SuperAdminRoutes.superAdmins)
 export class SuperAdminsController {
+  private static readonly superAdminId = 'superAdminId';
+
   constructor(private readonly superAdminService: SuperAdminsService) {}
 
-  @Post(SuperAdminRoutes.login)
-  @HttpCode(HttpStatus.OK)
-  async login(@Body() loginSuperAdminDto: LoginSuperAdminDto) {
-    return this.superAdminService.login(loginSuperAdminDto);
+  @Get(`${SuperAdminRoutes.findById}/:${SuperAdminsController.superAdminId}`)
+  async findOneById(
+    @Param(SuperAdminsController.superAdminId, IsMongodbObjectIdPipe)
+    superAdminId: string,
+  ): Promise<SuperAdminEntity> {
+    return this.superAdminService.findOneById(superAdminId);
   }
 }

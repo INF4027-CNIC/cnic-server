@@ -19,7 +19,7 @@ export const SuperAdminSchema = new mongoose.Schema<SuperAdmin>({
     lowercase: true,
   },
 
-  hash: {
+  password: {
     type: String,
     required: true,
     trim: true,
@@ -31,5 +31,5 @@ export interface SuperAdmin {
   firstname: string;
   lastname: string;
   email: string;
-  hash: string;
+  password: string;
 }
