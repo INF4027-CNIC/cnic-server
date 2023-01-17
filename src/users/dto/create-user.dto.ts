@@ -39,7 +39,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   @ApiProperty({
     type: String,
-    description: 'The path to the user avater image.',
+    description: 'The image name.',
   })
   readonly avatar: string;
 
