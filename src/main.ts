@@ -24,7 +24,6 @@ async function bootstrap() {
       'CNIC is an application to digitize the system of issuing and presenting national identity cards in cameroon. This is a university project and this repository represents the server(backend) part.',
     )
     .setVersion('1.0')
-    .addTag('Users.')
     .build();
 
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
