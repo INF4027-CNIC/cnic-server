@@ -19,7 +19,6 @@ import { IsMongodbObjectIdPipe } from 'src/common/pipes';
 import { CreateUserDto } from './dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdateUserCodeDTO } from './dto/update-code.dto';
-import { AdminJwtGuard } from 'src/auth-admin/guards';
 import {
   SwaggerGetUsersDoc,
   SwaggerPatchUsersDoc,
@@ -28,10 +27,12 @@ import {
   SwaggerPatchCodeUsersDoc,
 } from './decorators/swagger-doc.decorator';
 import { ApiTags } from '@nestjs/swagger';
+import { Role } from 'src/common/decorators';
+import { Roles } from 'src/common/enums';
 
+@Role(Roles.Admin, Roles.SuperAdmin)
 @Controller(UsersRoutes.users)
 @ApiTags('Users')
-@UseGuards(AdminJwtGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
