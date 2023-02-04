@@ -78,6 +78,26 @@ export const UserSchema = new mongoose.Schema<User>({
     required: true,
   },
 
+  uniqueIdentifier: {
+    type: Number,
+    required: true,
+  },
+
+  deliveryDate: {
+    type: Date,
+    required: true
+  },
+
+  expiryDate: {
+    type: Date,
+    required: true
+  },
+
+  identificationPost: {
+    type: String,
+    required: true
+  },
+
   metadata: {
     createdAt: {
       type: Date,
@@ -141,6 +161,11 @@ export interface User {
     createdAt: Date;
     updatedAt: Date;
   };
+
+  uniqueIdentifier: number;
+  deliveryDate: Date;
+  expiryDate: Date;
+  identificationPost: string;
 
   hash: string;
   hashRt: string;
