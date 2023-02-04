@@ -57,6 +57,7 @@ export class AuthSuperAdminService {
   }
 
   async jwtValidateSuperAdmin(superAdminId: string): Promise<SuperAdminEntity> {
+    console.log('hey')
     const superAdmin = await this.superAdminService.findOneById(superAdminId);
 
     console.log({ superAdmin });
