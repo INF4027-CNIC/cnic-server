@@ -6,7 +6,7 @@ import { IS_PUBLIC_ROUTE, JWT } from 'src/common/constants';
 
 @Injectable()
 export class AdminJwtGuard extends AuthGuard(JWT) implements CanActivate {
-  constructor(private reflector: Reflector) {
+  constructor(protected reflector: Reflector) {
     super();
   }
 

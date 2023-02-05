@@ -29,8 +29,10 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { Role } from 'src/common/decorators';
 import { Roles } from 'src/common/enums';
+import { RolesGuard } from 'src/common/guards';
 
-@Role(Roles.Admin, Roles.SuperAdmin)
+@Role(Roles.Admin)
+@UseGuards(RolesGuard)
 @Controller(UsersRoutes.users)
 @ApiTags('Users')
 export class UsersController {

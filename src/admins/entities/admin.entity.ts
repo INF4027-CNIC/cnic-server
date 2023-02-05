@@ -1,4 +1,5 @@
 import { Exclude } from 'class-transformer';
+import { Roles } from 'src/common/enums';
 import { Admin } from 'src/mongodb/schemas/admin.schema';
 
 export class AdminEntity {
@@ -7,6 +8,7 @@ export class AdminEntity {
   private password: string;
   private adminCode: number;
   private userRef: string;
+  private roles: Roles[];
 
   @Exclude()
   private hash: string;
@@ -27,6 +29,7 @@ export class AdminEntity {
     this.adminCode = adminData.adminCode;
     this.hash = adminData.hash;
     this.hashRt = adminData.hashRt;
+    this.roles = [...adminData.roles];
   }
 
   get getId(): string {
@@ -59,6 +62,10 @@ export class AdminEntity {
 
   get getBearerRt(): string {
     return this.bearerRt;
+  }
+
+  get getRoles(): Roles[] {
+    return [...this.roles];
   }
 
   setBearerRt(bearerRt: string) {

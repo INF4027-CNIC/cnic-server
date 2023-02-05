@@ -62,6 +62,8 @@ export interface Admin {
 
   userRef: string;
 
+  roles: Roles[];
+
   metadata: {
     nominateAt: Date;
     denominateAt: Date;
