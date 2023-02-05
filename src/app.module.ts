@@ -11,7 +11,7 @@ import { SuperAdminsModule } from './super-admins/super-admins.module';
     ConfigModule.forRoot({ isGlobal: true }),
     MongodbModule.forRoot(),
     AdminsModule,
-    AuthAdminModule,
+    // AuthAdminModule,
     AuthSuperAdminModule,
     SuperAdminsModule,
   ],

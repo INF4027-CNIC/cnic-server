@@ -4,6 +4,7 @@ import { Tokens } from 'src/auth-admin/types';
 import { AuthSuperAdminService } from './auth-super-admin.service';
 import { LoginSuperAdminDto } from './dto';
 import { authSuperAdminRoutes } from './enums';
+import { PublicRoute } from '../common/decorators/public.dcorator';
 
 @Controller(authSuperAdminRoutes.authSuperAdmin)
 @ApiTags('Auth-super-admins')
@@ -12,6 +13,7 @@ export class AuthSuperAdminController {
 
   @Post(authSuperAdminRoutes.login)
   @HttpCode(HttpStatus.OK)
+  @PublicRoute()
   async login(@Body() loginSuperAdminDto: LoginSuperAdminDto): Promise<Tokens> {
     return this.authSuperAdminService.login(loginSuperAdminDto);
   }

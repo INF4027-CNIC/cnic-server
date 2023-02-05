@@ -7,6 +7,8 @@ import { SUPER_ADMIN as SUPER_ADMIN_SCHEMA } from './auth-super-admin.contants';
 import { SuperAdminsModule } from 'src/super-admins/super-admins.module';
 import { JwtRefreshStrategy, JwtStrategy } from './strategies';
 import { JwtModule } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
+import { SuperAdminJwtGuard, SuperAdminJwtRtGuard } from './guards';
 
 @Module({
   imports: [
@@ -17,6 +19,9 @@ import { JwtModule } from '@nestjs/jwt';
     SuperAdminsModule,
   ],
   controllers: [AuthSuperAdminController],
-  providers: [AuthSuperAdminService, JwtStrategy, JwtRefreshStrategy],
+  providers: [{
+    provide: APP_GUARD,
+    useClass: SuperAdminJwtGuard,
+  }, JwtRefreshStrategy, AuthSuperAdminService, JwtStrategy, SuperAdminJwtRtGuard],
 })
 export class AuthSuperAdminModule {}
