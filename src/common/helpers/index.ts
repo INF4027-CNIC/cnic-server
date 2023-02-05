@@ -2,7 +2,15 @@ import * as argon2 from 'argon2';
 import { v4 as uuidv4 } from 'uuid';
 
 export const generateUUID = () => {
-  return uuidv4();
+  // generate code with format yyyyxxxxxxxxxxxxx
+  const date = new Date();
+
+  const year = date.getFullYear();
+
+  // Generate random number with 15 digits
+  const randomNumber = Math.floor(Math.random() * 100000000);
+
+  return `${year}${randomNumber}`;
 };
 
 export const hashPassword = async (password: string) => {
