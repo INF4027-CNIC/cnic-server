@@ -6,6 +6,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CredentialsTaken, DefaultHttpException } from 'src/common/exceptions';
+import { tenYearsLater } from 'src/common/utils';
 import { exceptionsCodes } from 'src/mongodb/enum';
 import { User } from 'src/mongodb/schemas';
 import { CreateUserDto } from './dto';
@@ -38,7 +39,13 @@ export class UsersService {
       profession: createUserDto.profession,
       fathername: createUserDto.fathername,
       mothername: createUserDto.mothername,
+      cniInfos: {
+        deliveryDate: createUserDto.cniDeliveryDate.toDateString(),
+        expiryDate: tenYearsLater(createUserDto.cniDeliveryDate).toDateString(),
+      },
     };
+
+    console.log({ userData });
 
     try {
       const newUser = new this.userModel(userData);

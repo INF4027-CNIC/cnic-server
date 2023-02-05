@@ -22,7 +22,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, JWT) {
   }
 
   async validate(req: Request, payload: JwtPayload) {
-    console.log('validated', { payload })
     const admin = await this.authAdminService.jwtValidateAdmin(payload.sub);
 
     if (!admin) throw new UnauthorizedException('Not authorized.');

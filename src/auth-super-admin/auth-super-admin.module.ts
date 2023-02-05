@@ -19,9 +19,15 @@ import { SuperAdminJwtGuard, SuperAdminJwtRtGuard } from './guards';
     SuperAdminsModule,
   ],
   controllers: [AuthSuperAdminController],
-  providers: [{
-    provide: APP_GUARD,
-    useClass: SuperAdminJwtGuard,
-  }, JwtRefreshStrategy, AuthSuperAdminService, JwtStrategy, SuperAdminJwtRtGuard],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: SuperAdminJwtGuard,
+    },
+    JwtRefreshStrategy,
+    AuthSuperAdminService,
+    JwtStrategy,
+    SuperAdminJwtRtGuard,
+  ],
 })
 export class AuthSuperAdminModule {}

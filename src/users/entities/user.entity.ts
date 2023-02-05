@@ -54,6 +54,15 @@ export class UserEntity {
   @ApiProperty()
   private updatedAt: Date;
 
+  @ApiProperty()
+  private cniCode: string;
+
+  @ApiProperty()
+  private cniDeliveryDate: Date;
+
+  @ApiProperty()
+  private cniExpiryDate: Date;
+
   @Exclude({ toPlainOnly: true })
   private hash: string;
 
@@ -87,6 +96,10 @@ export class UserEntity {
 
     this.fullname = userData.fullname;
 
+    this.cniCode = userData.cniInfos.cniCode;
+    this.cniDeliveryDate = userData.cniInfos.deliveryDate;
+    this.cniExpiryDate = userData.cniInfos.expiryDate;
+
     this.createdAt = userData.metadata.createdAt;
     this.updatedAt = userData.metadata.updatedAt;
 
@@ -102,6 +115,9 @@ export class UserEntity {
       fullname: this.fullname,
       phone: this.phone,
       avatar: this.avatar,
+      cniCode: this.cniCode,
+      cniDeliveryDate: this.cniDeliveryDate,
+      cniExpiryDate: this.cniExpiryDate,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
       hash: this.hash,
@@ -163,6 +179,18 @@ export class UserEntity {
 
   get getMothername(): string {
     return this.mothername;
+  }
+
+  get getCniCode(): string {
+    return this.cniCode;
+  }
+
+  get getCniDeliveryDate(): Date {
+    return this.cniDeliveryDate;
+  }
+
+  get getCniExpiryDate(): Date {
+    return this.cniExpiryDate;
   }
 
   get getCreatedAt() {

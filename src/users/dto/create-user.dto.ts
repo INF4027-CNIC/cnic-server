@@ -8,6 +8,8 @@ import {
   MaxLength,
   Min,
   MinLength,
+  IsDateString,
+  IsDate,
 } from 'class-validator';
 import { IsPhoneNumber } from '../../common/validators';
 export class CreateUserDto {
@@ -96,6 +98,14 @@ export class CreateUserDto {
     description: 'The address of the user.',
   })
   readonly address: string;
+
+  @IsDate()
+  @IsNotEmpty()
+  @ApiProperty({
+    type: String,
+    description: 'The date of the cni delivery.',
+  })
+  readonly cniDeliveryDate: Date;
 
   @IsString()
   @IsNotEmpty()

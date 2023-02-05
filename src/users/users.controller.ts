@@ -27,12 +27,12 @@ import {
   SwaggerPatchCodeUsersDoc,
 } from './decorators/swagger-doc.decorator';
 import { ApiTags } from '@nestjs/swagger';
-import { Role } from 'src/common/decorators';
+import { PublicRoute, Role } from 'src/common/decorators';
 import { Roles } from 'src/common/enums';
 import { RolesGuard } from 'src/common/guards';
 
-@Role(Roles.Admin)
-@UseGuards(RolesGuard)
+// @Role(Roles.Admin)
+// @UseGuards(RolesGuard)
 @Controller(UsersRoutes.users)
 @ApiTags('Users')
 export class UsersController {
@@ -42,6 +42,8 @@ export class UsersController {
   @HttpCode(HttpStatus.CREATED)
   @SwaggerPostUsersDoc()
   async create(@Body() createUserDto: CreateUserDto) {
+    console.log({ create: 'create' });
+
     return this.usersService.create(createUserDto);
   }
 
@@ -70,6 +72,7 @@ export class UsersController {
     return this.usersService.findById(userId);
   }
 
+  @PublicRoute()
   @Get(`${UsersRoutes.findByCode}/:userCode`)
   @HttpCode(HttpStatus.OK)
   @SwaggerGetUsersDoc(true)

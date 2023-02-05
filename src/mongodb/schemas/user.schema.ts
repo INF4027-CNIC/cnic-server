@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { Roles } from 'src/common/enums';
+import { generateUUID } from 'src/common/helpers';
 
 export const UserSchema = new mongoose.Schema<User>({
   name: {
@@ -78,24 +79,21 @@ export const UserSchema = new mongoose.Schema<User>({
     required: true,
   },
 
-  uniqueIdentifier: {
-    type: Number,
-    required: true,
-  },
+  cniInfos: {
+    cniCode: {
+      type: String,
+      default: () => generateUUID(),
+    },
 
-  deliveryDate: {
-    type: Date,
-    required: true
-  },
+    deliveryDate: {
+      type: Date,
+      required: true,
+    },
 
-  expiryDate: {
-    type: Date,
-    required: true
-  },
-
-  identificationPost: {
-    type: String,
-    required: true
+    expiryDate: {
+      type: Date,
+      required: true,
+    },
   },
 
   metadata: {
@@ -162,10 +160,11 @@ export interface User {
     updatedAt: Date;
   };
 
-  uniqueIdentifier: number;
-  deliveryDate: Date;
-  expiryDate: Date;
-  identificationPost: string;
+  cniInfos: {
+    cniCode: string;
+    deliveryDate: Date;
+    expiryDate: Date;
+  };
 
   hash: string;
   hashRt: string;
