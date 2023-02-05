@@ -10,7 +10,6 @@ import {
   Patch,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersRoutes } from './enum';
@@ -27,12 +26,7 @@ import {
   SwaggerPatchCodeUsersDoc,
 } from './decorators/swagger-doc.decorator';
 import { ApiTags } from '@nestjs/swagger';
-import { PublicRoute, Role } from 'src/common/decorators';
-import { Roles } from 'src/common/enums';
-import { RolesGuard } from 'src/common/guards';
-
-// @Role(Roles.Admin)
-// @UseGuards(RolesGuard)
+import { PublicRoute } from 'src/common/decorators';
 @Controller(UsersRoutes.users)
 @ApiTags('Users')
 export class UsersController {
