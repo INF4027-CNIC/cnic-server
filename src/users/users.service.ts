@@ -84,6 +84,7 @@ export class UsersService {
         profession: user.profession,
         fathername: user.fathername,
         mothername: user.mothername,
+        code: user.code,
 
         cniInfos: {
           deliveryDate: user.cniInfos.deliveryDate,
