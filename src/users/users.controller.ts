@@ -7,9 +7,12 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseFilePipe,
   Patch,
   Post,
   Query,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersRoutes } from './enum';
@@ -27,6 +30,9 @@ import {
 } from './decorators/swagger-doc.decorator';
 import { ApiTags } from '@nestjs/swagger';
 import { PublicRoute } from 'src/common/decorators';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { UploadOperations } from 'src/upload-file/utils';
 @Controller(UsersRoutes.users)
 @ApiTags('Users')
 export class UsersController {
@@ -39,6 +45,26 @@ export class UsersController {
     console.log({ create: 'create' });
 
     return this.usersService.create(createUserDto);
+  }
+
+  @Post('upload-image')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: UploadOperations.getDestination,
+        filename: UploadOperations.getFilename,
+      }),
+    }),
+  )
+  uploadFoodImage(
+    @UploadedFile(
+      new ParseFilePipe({
+        fileIsRequired: true,
+      }),
+    )
+    foodImage: Express.Multer.File,
+  ) {
+    return { image: foodImage.filename };
   }
 
   @Get(UsersRoutes.searchByName)
