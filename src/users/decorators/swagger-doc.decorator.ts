@@ -64,3 +64,12 @@ export function SwaggerDeleteUsersDoc() {
     ApiForbiddenResponse({ description: 'Not authorized.' }),
   );
 }
+
+export function SwaggerUploadImageDoc() {
+  return applyDecorators(
+    ApiOkResponse({
+      description: 'Image uploaded.',
+    }),
+    ApiForbiddenResponse({ description: 'Not authorized.' }),
+  );
+}

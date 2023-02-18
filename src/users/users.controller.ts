@@ -27,6 +27,7 @@ import {
   SwaggerPostUsersDoc,
   SwaggerDeleteUsersDoc,
   SwaggerPatchCodeUsersDoc,
+  SwaggerUploadImageDoc,
 } from './decorators/swagger-doc.decorator';
 import { ApiTags } from '@nestjs/swagger';
 import { PublicRoute } from 'src/common/decorators';
@@ -48,6 +49,7 @@ export class UsersController {
   }
 
   @Post('upload-image')
+  @SwaggerUploadImageDoc()
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({

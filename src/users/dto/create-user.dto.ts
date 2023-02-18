@@ -8,7 +8,6 @@ import {
   MaxLength,
   Min,
   MinLength,
-  IsDateString,
   IsDate,
 } from 'class-validator';
 import { IsPhoneNumber } from '../../common/validators';

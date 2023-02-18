@@ -41,7 +41,7 @@ export class UsersService {
       mothername: createUserDto.mothername,
       cniInfos: {
         deliveryDate: createUserDto.cniDeliveryDate.toDateString(),
-        expiryDate: tenYearsLater(createUserDto.cniDeliveryDate).toDateString()
+        expiryDate: tenYearsLater(createUserDto.cniDeliveryDate).toDateString(),
       },
     };
 
@@ -90,7 +90,7 @@ export class UsersService {
           deliveryDate: user.cniInfos.deliveryDate,
           expiryDate: user.cniInfos.expiryDate,
           cniCode: user.cniInfos.cniCode,
-        }
+        },
       };
 
       const retrievedUser = new UserEntity(new this.userModel(userData));

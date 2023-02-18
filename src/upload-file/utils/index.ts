@@ -7,7 +7,7 @@ export class UploadOperations {
     file: Express.Multer.File,
     callback: (error: Error | null, destination: string) => void,
   ) {
-    console.log("destination")
+    console.log('destination');
     callback(null, 'uploads');
   }
 
